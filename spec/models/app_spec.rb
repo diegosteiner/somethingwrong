@@ -6,6 +6,6 @@ RSpec.describe App, type: :model do
     subject { App.create!(app.attributes) }
 
     it { is_expected.to be_valid }
-    it { is_expected.to have_attributes({ name: app.name, slug: app.name.parameterize }) }
+    it { is_expected.to have_attributes(name: app.name, slug: app.name.parameterize) }
   end
 end
