@@ -12,7 +12,9 @@ RSpec.describe AppsController, type: :controller do
     let!(:app) { FactoryGirl.create(:app) }
     it 'returns http success' do
       get :show, id: app.to_param
+      json = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
+      expect(json).to include('name' => app.name, 'ok' => true)
     end
   end
 end
