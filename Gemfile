@@ -7,6 +7,8 @@ gem 'pg'
 # gem 'rack-cors'
 
 group :development, :test do
+  gem 'factory_girl_rails', require: false
+  gem 'faker', require: false
   gem 'byebug'
   gem 'pry-rails'
   gem 'rubocop', require: false

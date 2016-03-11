@@ -19,9 +19,10 @@ ActiveRecord::Schema.define(version: 20160311183255) do
 
   create_table "apps", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string   "name"
-    t.boolean  "ok"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "slug"
+    t.boolean  "ok",         default: true
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
 end
