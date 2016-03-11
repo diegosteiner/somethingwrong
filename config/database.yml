@@ -1,0 +1,23 @@
+# For details on connection pooling, see rails configuration guide
+# http://guides.rubyonrails.org/configuring.html#database-pooling
+# Set DATABASE_URL in application.yml
+# * for mysql use "mysql2://username:password@host:port/database_name"
+# * for postgres use "postgres://username:password@host:port/database_name"
+# * for sqlite use "sqlite://db/database_name.sqlite3?timeout=5000"
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV["DB_POOL"] || ENV['MAX_THREADS'] || 5 %>
+  url: <%= ENV['DATABASE_URL'] %>
+
+development:
+  <<: *default
+  database: project_development
+
+test:
+  <<: *default
+  database: project_test
+
+production:
+  <<: *default
