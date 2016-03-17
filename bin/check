@@ -19,7 +19,7 @@ echo "bundle-audit:"
 #fi
 
 echo "rspec:"
-bundle exec rspec
+bin/rspec
 if [ ! $? -eq 0 ]; then
   echo 'COMMIT ABORTED: rspec did not run successfully.'
   exit 1

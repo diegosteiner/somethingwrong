@@ -14,6 +14,7 @@ group :development, :test do
   gem 'pry-rails'
   gem 'rubocop', require: false
   gem 'bundler-audit', require: false
+  gem 'spring-commands-rspec'
 end
 
 group :development do
