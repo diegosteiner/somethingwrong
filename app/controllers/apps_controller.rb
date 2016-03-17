@@ -19,6 +19,11 @@ class AppsController < ApplicationController
     end
   end
 
+  def solution
+    @app.solve_problems!
+    render json: @app, serializer: AppSerializer
+  end
+
   private
 
   def set_app

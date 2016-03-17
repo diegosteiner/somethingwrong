@@ -37,4 +37,13 @@ RSpec.describe AppsController, type: :controller do
       expect(app.problems.last.data).to eq(json.deep_stringify_keys)
     end
   end
+
+  describe 'POST solution' do
+    let!(:problem) { create(:problem, app: app) }
+    before { expect(app).to receive(:solve_problems!).once }
+    it 'returns http success' do
+      post :solution, params: { id: app.id }
+      expect(response).to have_http_status(:success)
+    end
+  end
 end

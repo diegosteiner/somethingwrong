@@ -28,4 +28,15 @@ RSpec.describe App, type: :model do
       it { is_expected.to be(false) }
     end
   end
+
+  describe '#solve_problems!' do
+    let!(:problems) { create_list(:problem, 3, app: app) }
+    subject { app.solve_problems! }
+
+    it 'resolves all problems' do
+      is_expected.to be(true)
+      expect(app.problems.unsolved.any?).to be(false)
+      expect(app.ok?).to be(true)
+    end
+  end
 end

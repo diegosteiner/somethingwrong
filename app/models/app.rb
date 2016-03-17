@@ -8,6 +8,10 @@ class App < ApplicationRecord
     problems.unsolved.none?
   end
 
+  def solve_problems!
+    problems.unsolved.map(&:solve).exclude?(false)
+  end
+
   def to_param
     slug || super
   end

@@ -18,9 +18,11 @@ RSpec.describe Problem, type: :model do
     it { is_expected.to contain_exactly(*unsolved_problems) }
   end
 
-  describe '#solve!' do
+  describe '#solve' do
+    subject { problem.solve }
+    before { expect(problem).to receive(:save).once.and_call_original }
     it do
-      problem.solve!
+      is_expected.to be(true)
       expect(problem.solved?).to be(true)
     end
   end

@@ -5,7 +5,7 @@ class Problem < ApplicationRecord
 
   scope :unsolved, -> { where(solved_at: nil) }
 
-  def solve!
+  def solve
     update(solved_at: Time.zone.now)
   end
 
