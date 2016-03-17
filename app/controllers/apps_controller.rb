@@ -27,6 +27,6 @@ class AppsController < ApplicationController
   end
 
   def problem_params
-    params.except(:action, :controller).permit!
+    params.except(:action, :controller, :id).permit!
   end
 end

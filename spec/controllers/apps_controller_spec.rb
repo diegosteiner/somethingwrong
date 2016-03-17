@@ -28,13 +28,13 @@ RSpec.describe AppsController, type: :controller do
   end
 
   describe 'POST problem' do
-    let(:json) { { key: :value } }
+    let(:json) { { key: 'value' } }
     it 'returns http success' do
       post :problem, params: json.merge(id: app.id)
       expect(response).to have_http_status(:success)
       app.reload
-      expect(app.problems.count).to be(1)
       expect(app.ok?).to be(false)
+      expect(app.problems.last.data).to eq(json.deep_stringify_keys)
     end
   end
 end
