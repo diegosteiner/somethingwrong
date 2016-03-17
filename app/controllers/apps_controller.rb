@@ -1,5 +1,5 @@
 class AppsController < ApplicationController
-  before_action :set_app, only: [:show, :problem, :ok]
+  before_action :set_app, only: [:show, :problem]
 
   def index
     @apps = App.all
@@ -11,6 +11,12 @@ class AppsController < ApplicationController
   end
 
   def problem
+    @problem = @app.problems.build(data: problem_params.to_h)
+    if @problem.save
+      render json: @problem, serializer: ProblemSerializer
+    else
+      render json: { errors: @problem.errors }, status: 406
+    end
   end
 
   private
@@ -18,5 +24,9 @@ class AppsController < ApplicationController
   def set_app
     @app = App.find_by(id: params[:id])
     @app ||= App.find_or_initialize_by(slug: params[:id].parameterize)
+  end
+
+  def problem_params
+    params.except(:action, :controller).permit!
   end
 end
