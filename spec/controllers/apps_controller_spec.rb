@@ -40,7 +40,10 @@ RSpec.describe AppsController, type: :controller do
 
   describe 'POST solution' do
     let!(:problem) { create(:problem, app: app) }
-    before { expect(app).to receive(:solve_problems!).once }
+    before do
+      expect(App).to receive(:find_by).once.and_return(app)
+      expect(app).to receive(:solve_problems!).once
+    end
     it 'returns http success' do
       post :solution, params: { id: app.id }
       expect(response).to have_http_status(:success)

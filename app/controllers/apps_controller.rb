@@ -1,5 +1,5 @@
 class AppsController < ApplicationController
-  before_action :set_app, only: [:show, :problem]
+  before_action :set_app, only: [:show, :problem, :solution]
 
   def index
     @apps = App.all
