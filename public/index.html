@@ -26,22 +26,22 @@
 }
 
 .app .health {
-      border-radius: 50px;
-      height: 2em;
-      width: 2em;
-      display: inline-block;
-    }
+  border-radius: 50px;
+  height: 2em;
+  width: 2em;
+  display: inline-block;
+}
 
 .app .health.not_ok {
   background-color: red;
 
-      box-shadow: 0 0 10px red;
+  box-shadow: 0 0 10px red;
 }
 
 .app .health.ok {
   background-color: green;
-  
-      box-shadow: 0 0 10px green;
+
+  box-shadow: 0 0 10px green;
 }
     </style>
   </head>
@@ -52,31 +52,45 @@
     <div id="apps">
     </div>
     </main>
-    <template id="app">
+    <template id="app-template" data-app-id="">
       <div class="app">
-      <div class="health"></div>
+        <div class="health"></div>
         <h2></h2>
+        <button class="solve">Solve</button>
       </div>
     </template>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script>
 function drawApps() {
   $.ajax({
-    url: '/apps',
+    url: '/apps'
   })
   .done(function(res) {
     $.each(res.data, function() {
-      var app = this;
-      drawApp(app);
+      drawApp(this);
     })
   })
 }
 
+function hookApp(app, element) {
+  element.find('button.solve').click(function() {
+    $.ajax({
+      url: app.links.solution,
+        method: 'POST'
+    })
+    .done(function(res) {
+      window.location.reload();
+    });
+  });
+}
+
 function drawApp(app) {
-  var t = document.querySelector('template#app').content;
+  var t = document.querySelector('template#app-template').content;
   var clone = document.importNode(t, true);
   $(clone).find('h2').html(app.attributes.name);
   $(clone).find('.health').addClass(app.attributes.ok ? 'ok' : 'not_ok');
+  $(clone).data('app-id', app.id);
+  hookApp(app, $(clone));
   document.getElementById("apps").appendChild(clone);
 }
 

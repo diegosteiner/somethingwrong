@@ -23,7 +23,12 @@ RSpec.describe AppsController, type: :controller do
   describe 'GET show' do
     it 'returns http success' do
       get :show, params: { id: app.id }
+      json = JSON.parse(response.body).deep_symbolize_keys
       expect(response).to have_http_status(:success)
+
+      expect(json[:data][:links][:self]).to eq(app_path(app))
+      expect(json[:data][:links][:solution]).to eq(solution_app_path(app))
+      expect(json[:data][:links][:problem]).to eq(problem_app_path(app))
     end
   end
 
