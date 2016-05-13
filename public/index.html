@@ -5,65 +5,81 @@
     <meta charset="utf-8">
 
     <title>Something wrong</title>
-    <meta name="description" content="The HTML5 Herald">
-    <meta name="author" content="SitePoint">
 
     <!--[if lt IE 9]>
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <style>
 #apps {
+  padding: 3em;
+  max-width: 500px;
+  margin: 0 auto;
+  font-family: 'arial', sans-serif;
 }
 
 .app {
-  padding: .5em;
+  padding: .65em;
+  border-radius: .25em;
+  display: flex;
+  text-decoration: none;
+  flex-direction: row-reverse;
+}
+
+.app.ok {
+  border: 1px solid #5cb85c;
+  color: #5cb85c;
+  font-weight: normal;
+}
+
+.app.not_ok {
+  border: 1px solid #e60000;
+  background-color: #e60000;
+  color: white;
+  font-weight: bold;
 }
 
 .app h2 {
-  display: inline-block;
-  font-size: 3em;
-  margin: .25em .25em .25em 1em;
+  width: 85%;
+  font-size: 1em;
+  margin: 0;
+  font-weight: inherit;
 }
 
 .app .health {
-  border-radius: 50px;
-  height: 2em;
-  width: 2em;
-  display: inline-block;
-}
-
-.app .health.not_ok {
-  background-color: red;
-
-  box-shadow: 0 0 10px red;
-}
-
-.app .health.ok {
-  background-color: green;
-
-  box-shadow: 0 0 10px green;
+  width: 15%;
+  text-align: center;
+  font-weight: bold;
 }
     </style>
   </head>
 
   <body>
     <main>
-    <h1>Apps</h1>
-    <div id="apps">
-    </div>
+    <div id="apps"></div>
+    <div class="help"></div>
     </main>
     <template id="app-template" data-app-id="">
-      <div class="app">
+      <a class="app" href="#">
         <div class="health"></div>
         <h2></h2>
-        <button class="solve">Solve</button>
-      </div>
+        <div class="report"></div>
+        </div>
     </template>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script>
+
+function params() {
+  var queryDict = {}
+  location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]});
+  return queryDict;
+}
+
 function drawApps() {
   $.ajax({
-    url: '/apps'
+    url: '/apps',
+    data: { 
+      api_key: params()['api_key']
+    }
   })
   .done(function(res) {
     $.each(res.data, function() {
@@ -73,24 +89,48 @@ function drawApps() {
 }
 
 function hookApp(app, element) {
-  element.find('button.solve').click(function() {
-    $.ajax({
-      url: app.links.solution,
-        method: 'POST'
-    })
-    .done(function(res) {
-      window.location.reload();
-    });
+  element.click(function() {
+    if(app.attributes.ok) {
+      $.ajax({
+        url: app.links.problem,
+        method: 'POST',
+        data: { 
+          api_key: params()['api_key'],
+          app: { 
+            data: 'manual'
+          }
+        }
+      })
+      .done(function(res) {
+        window.location.reload();
+      });
+    } else {
+      $.ajax({
+        url: app.links.solution,
+        method: 'POST',
+        data: { 
+          api_key: params()['api_key']
+        }
+      })
+      .done(function(res) {
+        window.location.reload();
+      });
+    }
   });
 }
 
 function drawApp(app) {
   var t = document.querySelector('template#app-template').content;
   var clone = document.importNode(t, true);
-  $(clone).find('h2').html(app.attributes.name);
-  $(clone).find('.health').addClass(app.attributes.ok ? 'ok' : 'not_ok');
-  $(clone).data('app-id', app.id);
-  hookApp(app, $(clone));
+  var app_elem = $(clone).find('.app');
+  app_elem.addClass(app.attributes.ok ? 'ok' : 'not_ok');
+  app_elem.find('h2').html(app.attributes.name);
+  app_elem.find('.health').html(app.attributes.ok ? '✓' : '!');
+  if(app.attributes.ok) {
+    app_elem.find('.report').html(app);
+  }
+  app_elem.data('app-id', app.id);
+  hookApp(app, app_elem);
   document.getElementById("apps").appendChild(clone);
 }
 

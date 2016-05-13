@@ -1,5 +1,6 @@
 class AppsController < ApplicationController
   before_action :set_app, only: [:show, :problem, :solution]
+  before_action :authorize!
 
   def index
     @apps = App.all

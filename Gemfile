@@ -3,9 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '>= 5.0.0.beta3', '< 5.1'
 gem 'pg'
 gem 'active_model_serializers', '>= 0.10.0.rc4'
-
-# Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'figaro'
 
 group :development, :test do
   gem 'factory_girl_rails', require: false
