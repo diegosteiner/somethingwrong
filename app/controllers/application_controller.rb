@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
   include ActionController::Serialization
 
-  private 
+  private
 
   def authorize!
     return unless ENV.fetch('API_KEY').present?

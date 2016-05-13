@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AppsController, type: :controller do
+  before { allow(controller).to receive(:authorize!) }
   let!(:app) { create(:app) }
   describe 'GET index' do
     it 'returns http success' do
