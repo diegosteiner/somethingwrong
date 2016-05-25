@@ -1,0 +1,86 @@
+body > main {
+  max-width: 500px;
+  margin: 0 auto;
+  font-family: 'arial', sans-serif;
+}
+
+#apps {
+  padding: 0;
+}
+
+.app {
+  border-radius: .25em;
+  display: block;
+}
+
+.app header {
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  padding: .65em;
+  padding-top: .75em;
+}
+
+.app main {
+  display: none;
+  border-bottom-radius: .25em;
+}
+
+.app .actions {
+  text-align: right;
+  padding: .65em;
+}
+
+.app button {
+  border: none;
+  color: white;
+  background: #e60000;
+  padding: .65em;
+  border-radius: .25em;
+}
+
+.app.ok {
+  border: 1px solid #5cb85c;
+  color: #5cb85c;
+  font-weight: normal;
+}
+
+.app.not_ok {
+  border: 1px solid #e60000;
+  color: #e60000;
+  font-weight: bold;
+}
+
+.app.not_ok header {
+  background-color: #e60000;
+  color: white;
+}
+
+.app h2 {
+  width: 85%;
+  font-size: 1em;
+  margin: 0;
+  font-weight: inherit;
+}
+
+.app .health {
+  width: 15%;
+  text-align: right;
+  font-weight: bold;
+}
+
+.problems {
+  padding: .65em .65em .65em 2.5em;
+  color: #e60000;
+  background-color: white;
+  font-size: 0.75em;
+  font-weight: normal;
+}
+
+.problem {
+  margin: 0.5em 0;
+}
+
+.problem h3 {
+  margin: 0 0 0.25em 0;
+}

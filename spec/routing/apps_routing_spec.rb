@@ -17,6 +17,11 @@ RSpec.describe App, type: :routing do
     it { is_expected.to route_to(controller: 'apps', action: 'problem', id: app.slug) }
   end
 
+  describe 'GET problems' do
+    subject { { get: "/apps/#{app.slug}/problems" } }
+    it { is_expected.to route_to(controller: 'apps', action: 'problems', id: app.slug) }
+  end
+
   describe 'POST solution' do
     subject { { post: "/apps/#{app.slug}/solution" } }
     it { is_expected.to route_to(controller: 'apps', action: 'solution', id: app.slug) }

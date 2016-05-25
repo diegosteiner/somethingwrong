@@ -33,6 +33,19 @@ RSpec.describe AppsController, type: :controller do
     end
   end
 
+  describe 'GET problems' do
+    let!(:problems) { create(:solved_problem, app: app) }
+    let!(:unsolved_problems) { create_list(:problem, 3, app: app) }
+    it 'returns http success' do
+      get :problems, params: { id: app.id }
+
+      json = JSON.parse(response.body).deep_symbolize_keys
+      expect(response).to have_http_status(:success)
+      expect(json[:meta]).to include(total: app.problems.unsolved.count)
+      expect(json[:data][0][:attributes]).to include(solved: false, app_id: app.id)
+    end
+  end
+
   describe 'POST problem' do
     let(:json) { { key: 'value' } }
     it 'returns http success' do

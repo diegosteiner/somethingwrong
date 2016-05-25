@@ -1,69 +1,42 @@
 <!doctype html>
-
 <html lang="en">
   <head>
     <meta charset="utf-8">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Something wrong</title>
 
     <!--[if lt IE 9]>
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <style>
-#apps {
-  padding: 3em;
-  max-width: 500px;
-  margin: 0 auto;
-  font-family: 'arial', sans-serif;
-}
-
-.app {
-  padding: .65em;
-  border-radius: .25em;
-  display: flex;
-  text-decoration: none;
-  flex-direction: row-reverse;
-}
-
-.app.ok {
-  border: 1px solid #5cb85c;
-  color: #5cb85c;
-  font-weight: normal;
-}
-
-.app.not_ok {
-  border: 1px solid #e60000;
-  background-color: #e60000;
-  color: white;
-  font-weight: bold;
-}
-
-.app h2 {
-  width: 85%;
-  font-size: 1em;
-  margin: 0;
-  font-weight: inherit;
-}
-
-.app .health {
-  width: 15%;
-  text-align: center;
-  font-weight: bold;
-}
-    </style>
+    <link rel="stylesheet" type="text/css" href="application.css">
   </head>
 
   <body>
     <main>
-    <div id="apps"></div>
+    <h1>Something Wrong</h1>
+    <ul id="apps"></ul>
     <div class="help"></div>
     </main>
-    <template id="app-template" data-app-id="">
-      <a class="app" href="#">
-        <div class="health"></div>
-        <h2></h2>
-        <div class="report"></div>
+    <template id="app-template">
+      <li class="app" data-app-id="">
+        <header>
+          <h2></h2>
+          <div class="health"></div>
+        </header>
+        <main>
+        <ul class="problems"></ul>
+        <div class="actions">
+          <button class="solve">✓ Solve Problems</button>
         </div>
+        </main>
+      </li>
+    </template>
+
+    <template id="problem-template">
+      <li class="problem" data-problem-id="">
+        <h3></h3>
+        <div class="data"></div>
+      </li>
     </template>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script>
@@ -89,34 +62,72 @@ function drawApps() {
 }
 
 function hookApp(app, element) {
-  element.click(function() {
+  element.find('header').click(function() {
     if(app.attributes.ok) {
       $.ajax({
         url: app.links.problem,
         method: 'POST',
         data: { 
           api_key: params()['api_key'],
-          app: { 
-            data: 'manual'
-          }
+          source: 'manual',
+          app: { }
         }
       })
       .done(function(res) {
         window.location.reload();
       });
     } else {
-      $.ajax({
-        url: app.links.solution,
-        method: 'POST',
-        data: { 
-          api_key: params()['api_key']
-        }
-      })
-      .done(function(res) {
-        window.location.reload();
-      });
+      var main_element = element.find('main');
+      if(main_element.is(':visible')) {
+        main_element.hide();
+      } else {
+        drawProblems(app, element);
+        main_element.show();
+      }
     }
   });
+  element.find('button.solve').click(function() {
+    $.ajax({
+      url: app.links.solution,
+      method: 'POST',
+      data: { 
+        api_key: params()['api_key']
+      }
+    })
+    .done(function(res) {
+      window.location.reload();
+    });
+  });
+}
+
+function solveProblems(app) {
+}
+
+function drawProblems(app, element) {
+  $.ajax({
+    url: app.links.problems,
+    method: 'GET',
+    data: { 
+      api_key: params()['api_key']
+    }
+  })
+  .done(function(res) {
+    var problem_list_element = element.find('main ul.problems')
+      problem_list_element.empty();
+    $.each(res.data, function() {
+      drawProblem(this, problem_list_element);
+    });
+  });
+}  
+
+function drawProblem(problem, element) {
+  var t = document.querySelector('template#problem-template').content;
+  var clone = document.importNode(t, true);
+  var problem_elem = $(clone).find('.problem');
+  problem_elem.find('h3').html(problem.attributes.source);
+  problem_elem.find('.data').html(JSON.stringify(problem.attributes.data));
+  problem_elem.data('problem-id', problem.id);
+  $(element).append(clone);
 }
 
 function drawApp(app) {
@@ -126,9 +137,6 @@ function drawApp(app) {
   app_elem.addClass(app.attributes.ok ? 'ok' : 'not_ok');
   app_elem.find('h2').html(app.attributes.name);
   app_elem.find('.health').html(app.attributes.ok ? '✓' : '!');
-  if(app.attributes.ok) {
-    app_elem.find('.report').html(app);
-  }
   app_elem.data('app-id', app.id);
   hookApp(app, app_elem);
   document.getElementById("apps").appendChild(clone);

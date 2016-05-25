@@ -1,5 +1,5 @@
 class AppsController < ApplicationController
-  before_action :set_app, only: [:show, :problem, :solution]
+  before_action :set_app, only: [:show, :problem, :problems, :solution]
   before_action :authorize!
 
   def index
@@ -11,8 +11,13 @@ class AppsController < ApplicationController
     render json: @app
   end
 
+  def problems
+    @problems = @app.problems.unsolved
+    render json: @problems, each_serializer: ProblemSerializer, meta: { total: @problems.count }
+  end
+
   def problem
-    @problem = @app.problems.build(data: problem_params.to_h)
+    @problem = @app.problems.build(data: problem_params.to_h, source: params[:source])
     if @problem.save
       render json: @problem, serializer: ProblemSerializer
     else
