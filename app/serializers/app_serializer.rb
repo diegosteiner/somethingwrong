@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AppSerializer < ActiveModel::Serializer
   attributes :id, :name, :ok
   has_many :problems

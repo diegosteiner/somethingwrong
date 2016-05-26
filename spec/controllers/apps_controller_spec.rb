@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe AppsController, type: :controller do
@@ -42,7 +43,7 @@ RSpec.describe AppsController, type: :controller do
       json = JSON.parse(response.body).deep_symbolize_keys
       expect(response).to have_http_status(:success)
       expect(json[:meta]).to include(total: app.problems.unsolved.count)
-      expect(json[:data][0][:attributes]).to include(solved: false, app_id: app.id)
+      expect(json[:data][0][:attributes]).to include(solved: false, 'app-id': app.id)
     end
   end
 

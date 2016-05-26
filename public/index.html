@@ -48,6 +48,7 @@ function params() {
 }
 
 function drawApps() {
+  $("#apps").empty();
   $.ajax({
     url: '/apps',
     data: { 
@@ -95,7 +96,7 @@ function hookApp(app, element) {
       }
     })
     .done(function(res) {
-      window.location.reload();
+      drawApps();
     });
   });
 }
@@ -143,7 +144,7 @@ function drawApp(app) {
 }
 
 $(document).ready(function() {
-  drawApps();
+  vat i = setInterval(drawApps,30000);
 });
     </script>
   </body>

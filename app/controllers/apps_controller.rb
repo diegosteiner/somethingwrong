@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AppsController < ApplicationController
   before_action :set_app, only: [:show, :problem, :problems, :solution]
   before_action :authorize!

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class App < ApplicationRecord
   has_many :problems, dependent: :destroy
   validates :slug, presence: true, uniqueness: true

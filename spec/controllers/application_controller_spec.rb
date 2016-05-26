@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe ApplicationController, type: :controller do
@@ -10,9 +11,9 @@ RSpec.describe ApplicationController, type: :controller do
     end
     let(:text) { 'test' }
     let(:api_key) { SecureRandom.hex(26) }
-    before do 
-      allow(ENV).to receive(:fetch).with('API_KEY').and_return(api_key) 
-      allow(ENV).to receive(:[]).with('API_KEY').and_return(api_key) 
+    before do
+      allow(ENV).to receive(:fetch).with('API_KEY').and_return(api_key)
+      allow(ENV).to receive(:[]).with('API_KEY').and_return(api_key)
     end
 
     context 'with no API_KEY set' do
