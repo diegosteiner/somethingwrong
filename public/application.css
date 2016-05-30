@@ -11,6 +11,7 @@ body > main {
 .app {
   border-radius: .25em;
   display: block;
+  margin-bottom: 1em;
 }
 
 .app header {

@@ -35,7 +35,7 @@ class AppsController < ApplicationController
 
   def set_app
     @app = App.find_by(id: params[:id])
-    @app ||= App.find_or_initialize_by(slug: params[:id].parameterize)
+    @app ||= App.find_or_create_by(slug: params[:id]) { |app| app.name = app.slug }
   end
 
   def problem_params

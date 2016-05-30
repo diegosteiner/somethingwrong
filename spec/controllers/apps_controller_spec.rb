@@ -24,13 +24,24 @@ RSpec.describe AppsController, type: :controller do
 
   describe 'GET show' do
     it 'returns http success' do
-      get :show, params: { id: app.id }
+      get :show, params: { id: app.to_param }
       json = JSON.parse(response.body).deep_symbolize_keys
       expect(response).to have_http_status(:success)
-
       expect(json[:data][:links][:self]).to eq(app_path(app))
       expect(json[:data][:links][:solution]).to eq(solution_app_path(app))
       expect(json[:data][:links][:problem]).to eq(problem_app_path(app))
+    end
+
+    context 'with unknown app' do
+      let(:app) { build_stubbed(:app) }
+      it 'returns http success' do
+        get :show, params: { id: app.slug }
+        json = JSON.parse(response.body).deep_symbolize_keys
+        expect(response).to have_http_status(:success)
+        expect(json[:data][:links][:self]).to eq(app_path(app))
+        expect(json[:data][:links][:solution]).to eq(solution_app_path(app))
+        expect(json[:data][:links][:problem]).to eq(problem_app_path(app))
+      end
     end
   end
 
